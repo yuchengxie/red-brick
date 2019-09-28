@@ -1,0 +1,83 @@
+{
+  "nbc-wallet": {
+    "homepage": "http://www.nb-chain.net",
+    "policy": {
+      "file_read": true,
+      "file_write": true,
+      "file_execute": true,
+      "dir_create": false,
+      "dir_list": false,
+      "tee_getpass": true,
+      "tee_signature": true,
+      "tee_mining": true
+    }
+  },
+  "root-app": {
+    "homepage": "file://root-app",
+    "policy": {
+      "root_config_read": true,
+      "root_config_write": false
+    }
+  },
+  "my-test1": {
+    "homepage": "file://my-test1",
+    "app_type": "normal",
+    "policy": {
+      "access_list": ["test3"],
+      
+      "file_read": true,
+      "file_write": true,
+      "file_execute": true,
+      
+      "dir_create": true,
+      "dir_list": true,
+      
+      "tee_base": true,
+      "tee_pay": true,
+      "tee_miner": true,
+      "tee_admin": true,
+      
+      "root_config_read": true,
+      "root_config_write": true
+    }
+  },
+  
+  "my-test2": {
+    "homepage": "file://my-test2/index.html",
+    "app_type": "hidden",
+    "serv_name": "test2",
+    "policy": {
+      "file_read": true
+    }
+  },
+  
+  "my-test3": {
+    "homepage": "file://my-test3/index.html",
+    "app_type": "dialog",
+    "screen": [800,500],
+    "serv_name": "test3",
+    "policy": {
+      "file_read": true
+    }
+  },
+  
+  "my-test4": {
+    "homepage": "file://my-test4/index.html",
+    "app_type": "normal",
+    "policy": {
+      "file_read": true
+    }
+  },
+
+  "chain-browser":{
+    "homepage": "file://chain-browser/index.html",
+    "app_type": "normal",
+    "policy": {
+      "file_read": true,
+      "tee_base": true,
+      "tee_pay": true,
+      "tee_miner": true,
+      "tee_admin": true
+    }
+  }
+}

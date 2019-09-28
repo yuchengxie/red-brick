@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>区块浏览器</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <script src="./bootstrap/js/jQuery.min.js"></script>
+    <script src="./bootstrap/js/popper.js"></script>
+    <script src="./bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="./bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" href="./index.css" />
+  </head>
+  <body>
+    <nav
+      class="navbar navbar-expand-md navbar-light bg-light"
+      style="margin-top:30px"
+    >
+      <a class="navbar-brand ml-sm-1" href="#">HZF</a>
+      <button
+        class="navbar-toggler d-lg-none"
+        type="button"
+        data-toggle="collapse"
+        data-target="#collapsibleNavId"
+        aria-controls="collapsibleNavId"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="collapsibleNavId">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+          <li class="nav-item" id="nav_account">
+            <a class="nav-link" href="#">账户</a>
+          </li>
+          <li class="nav-item" id="nav_block">
+            <a class="nav-link" href="#"
+              >区块 <span class="sr-only">(current)</span></a
+            >
+          </li>
+          <li class="nav-item" id="nav_utxo">
+            <a class="nav-link" href="#"
+              >UTXO<span class="sr-only">(current)</span></a
+            >
+          </li>
+          <li class="nav-item" id="nav_test">
+            <a class="nav-link" href="#"
+              >测试<span class="sr-only">(current)</span></a
+            >
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0 col-md-6 col-sm-11">
+          <input
+            class="form-control col-md-9 col-sm-8 mr-1"
+            type="text"
+            placeholder="搜索"
+            id="input_search"
+          />
+          <button class="btn btn-outline-success my-2 my-sm-0" id="btn_search" type="button">
+            搜索
+          </button>
+        </form>
+      </div>
+    </nav>
+
+    <div style="margin-top: 16px">
+      <iframe
+        src="./pages/account.html"
+        id="frame_account"
+        class="page"
+        width="100%"
+        frameborder="0"
+        scrolling="auto"
+      ></iframe>
+      <iframe
+        src="./pages/block.html"
+        class="page"
+        id="frame_block"
+        width="100%"
+        frameborder="0"
+        scrolling="auto"
+      ></iframe>
+      <iframe
+        src="./pages/utxo.html"
+        class="page"
+        id="frame_utxo"
+        width="100%"
+        frameborder="0"
+        scrolling="auto"
+      ></iframe>
+      <iframe
+        src="./pages/blockdetail.html"
+        class="page"
+        id="frame_blockdetail"
+        width="100%"
+        frameborder="0"
+        scrolling="auto"
+      ></iframe>
+      <iframe
+        src="./pages/test.html"
+        class="page"
+        id="frame_test"
+        width="100%"
+        frameborder="0"
+        scrolling="auto"
+      ></iframe>
+    </div>
+  </body>
+</html>
+
+<script src="./utils/safe_buffer.js"></script>
+<script src="./utils/sha256.min.js"></script>
+<script src="./utils/packutils.js"></script>
+<script src="./render.js"></script>

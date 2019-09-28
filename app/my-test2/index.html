@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>测试</title>
+</head>
+<body>
+
+<p>我的测试页</p>
+
+<script>
+LRS._on('sys-asyn-reply', function(event,ret) {
+  if (ret && ret.command == 'echo')
+    LRS._sendAsyn({command:'plugins',task:'echoReply',winId:LRS._winid,desc:'hello'});
+});
+</script>
+
+</body>
+</html>

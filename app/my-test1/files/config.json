@@ -1,0 +1,40 @@
+{
+  "nbc-wallet": {
+    "homepage": "http://www.nb-chain.net",
+    "policy": {
+      "file_read": true,
+      "file_write": true,
+      "file_execute": true,
+      "dir_create": false,
+      "dir_list": false,
+      "tee_getpass": true,
+      "tee_signature": true,
+      "tee_mining": true
+    }
+  },
+  "root-app": {
+    "homepage": "file://root-app",
+    "policy": {
+      "root_config_read": true,
+      "root_config_write": false
+    }
+  },
+  "my-test1": {
+    "homepage": "file://my-test1",
+    "policy": {
+      "file_read": true,
+      "file_write": true,
+      "file_execute": true,
+      
+      "dir_create": true,
+      "dir_list": true,
+      
+      "tee_getpass": true,
+      "tee_signature": true,
+      "tee_mining": true,
+      
+      "root_config_read": true,
+      "root_config_write": true
+    }
+  }
+}

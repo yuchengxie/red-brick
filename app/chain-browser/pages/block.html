@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <script src="../bootstrap/js/jQuery.min.js"></script>
+    <script src="../bootstrap/js/popper.js"></script>
+    <script src="../bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h3>区块查询</h3>
+      <hr />
+      <div class="col-md-12" style="line-height: 40px;height: 40px;">
+        <div class="row">
+          <div class="col-md-2">序号</div>
+          <div class="col-md-2">高度</div>
+          <div class="col-md-4">时间</div>
+          <div class="col-md-2">交易</div>
+          <div class="col-md-2">随机值</div>
+        </div>
+        <div id="content">
+          <!-- <div class="row">
+            <div class="col-md-2">1</div>
+            <div class="col-md-2">
+              <span id="height1" class="blockheight">10010</span>
+            </div>
+            <div class="col-md-4">2019-08-08:08:08</div>
+            <div class="col-md-2">1</div>
+            <div class="col-md-2">111111111111</div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">1</div>
+            <div class="col-md-2">
+              <span id="height" class="blockheight">99000</span>
+            </div>
+            <div class="col-md-4">2019-08-08:08:08</div>
+            <div class="col-md-2">1</div>
+            <div class="col-md-2">111111111111</div>
+          </div>
+          <div class="row">
+            <div class="col-md-2">1</div>
+            <div class="col-md-2">
+              <span id="height" class="blockheight">23030</span>
+            </div>
+            <div class="col-md-4">2019-08-08:08:08</div>
+            <div class="col-md-2">1</div>
+            <div class="col-md-2">111111111111</div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </body>
+</html>
+
+<script></script>
+
+<style>
+  .row:nth-child(odd) {
+    /* background-color: #eee; */
+    background-color: rgba(0, 0, 0, 0.01);
+  }
+  .row:nth-child(even) {
+    background-color: #fff;
+  }
+  .row:nth-child(1) {
+    border-bottom: 1px solid #eee;
+    background-color: transparent;
+  }
+
+  .row:nth-child(n + 2) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .row:nth-child(n + 1):hover {
+    background-color: rgba(0, 0, 0, 0.03);
+  }
+  .blockheight {
+    color: #4498fb;
+  }
+  .blockheight:hover {
+    text-decoration: underline;
+  }
+</style>

@@ -1,0 +1,9 @@
+.page {
+    /* visibility: hidden; */
+    display: none
+}
+
+.page.active{
+    /* visibility:visible; */
+    display:block
+}

@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>测试</title>
+</head>
+<body>
+
+<h1>Hello World!</h1>
+
+<p>测试1：点击如下链接（在本窗口）打开<br>
+  <a href='./index2.html'>点击打开</a>
+  <a href='file://my-test1/index2.html'>点击打开</a>
+</p>
+
+<p>测试2：按住 shift 键，点击如下链接（在新窗口）打开<br>
+  <a href='./index2.html'>点击打开</a>
+  <a href='file://my-test1/index2.html'>点击打开</a>
+</p>
+
+<p>测试3：点击如下链接（在新窗口）打开<br>
+  <a target='_blank' href='./index2.html'>点击打开</a>
+  <a target='_blank' href='file://my-test1/index2.html'>点击打开</a>
+  <a target='_blank' href='nbc://nbc-wallet/index.html'>点击打开 NBC_WALLET</a>
+</p>
+
+<p>测试4：读文件<br>
+  <button onclick='readFile(event)'>同步读取 config.json</button> <br>
+  <button onclick='readFile2(event)'>异步读取 config.json</button>
+</p>
+
+<p>测试5：请求服务<br>
+  <button onclick='queryService(event)'>同步请求 test3 服务</button> <br>
+  <button onclick='queryService2(event)'>异步请求 test3 服务</button>
+</p>
+
+<script>
+LRS._on('sys-asyn-reply', function(event,ret) {
+  console.log('query result:',ret);  // ret is {command,error,data}
+});
+
+function readFile(event) {
+  var ret = LRS._sendSync({command:'fileRead',path:'config.json',encoding:'utf-8'});
+  alert(ret.error || ret.data);
+}
+
+function readFile2(event) {
+  LRS._sendAsyn({command:'fileRead',path:'config.json',encoding:'utf-8'});
+}
+
+function queryService(event) {
+  window.open('file://my-test3/index.html','_blank');
+  
+  setTimeout( function() {
+    LRS.query('test3', {command:'echo'}, function(retMsg) {
+      console.log('replied:',retMsg);  // retMsg=null means failed
+    }, 5000);  // within 5 seconds
+  }, 3000);
+}
+
+function queryService2(event) {
+  window.open('file://my-test3/index.html','_blank');
+  
+  setTimeout( function() {
+    var msgIdx = LRS.query('test3',{command:'echo'});
+    
+    setTimeout( function() {
+      var retMsg = LRS.findReply(msgIdx);
+      console.log('replied:',retMsg);
+    },2000);
+  }, 3000);
+}
+</script>
+
+</body>
+</html>

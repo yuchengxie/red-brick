@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>测试</title>
+</head>
+<body>
+
+<h1>Hello World!</h1>
+
+<p><a target='_blank' href='file://my-test3/index.html'>跳转</a></p>
+
+<script>
+LRS._on('income-query', function(event, msg, servName, msgIdx, webId) {
+  console.log('income-query',msg,servName,msgIdx,webId);
+  
+  // if (msg.command == 'echo') ...
+  var retMsg = {error:'', desc:'OK'};  // do some caculation
+  
+  LRS._sendAsyn(retMsg,servName,msgIdx,webId); // reply caculate result
+});
+
+LRS._on('sys-asyn-reply', function(event, retMsg) {
+  console.log('result is:',retMsg);
+});
+
+/*
+setTimeout( function() {
+  LRS._sendAsyn({command:'alignCenter'});
+},1000);  */
+
+</script>
+
+</body>
+</html>

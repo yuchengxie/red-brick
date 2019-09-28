@@ -1,0 +1,127 @@
+{
+  "categories": [ {"name":"工具"},{"name":"娱乐"},{"name":"游戏"} ],
+  
+  "nodes": [
+    {
+      "name": "掌阅",
+      "attributes": {},           
+      "id": "node1",
+      "size": 35,
+      "url": "http://www.baidu.com",
+      "category": 1
+    }, {
+      "name": "测试3",
+      "attributes": {},
+      "id": "node2",
+      "size": 10,
+      "url": "file://my-test3/index.html",
+      "category": 1
+    }, {
+      "name": "NBC钱包",
+      "attributes": {},
+      "id": "node3",
+      "size": 30,
+      "url": "nbc://nbc-wallet/ProductionCenter_NBC_Official_Website.html",
+      "category": 0
+    }, {
+      "name": "测试2",
+      "attributes": {},
+      "id": "node4",
+      "size": 20,
+      "url": "file://my-test2/index.html",
+      "category": 0
+    }, {
+      "name": "测试4",
+      "attributes": {},
+      "id": "node5",
+      "size": 10,
+      "url": "file://my-test4/index.html",
+      "category": 0
+    }, {
+      "name": "前端交流",
+      "attributes": {},
+      "id": "node6",
+      "size": 20,
+      "category": 1
+    }, {
+      "name": "和睦一家",
+      "attributes": {},
+      "id": "node7",
+      "size": 20,
+      "category": 1
+    }, {
+      "name": "初中同学",
+      "attributes": {},
+      "id": "node8",
+      "size": 20,
+      "category": 1
+    }, {
+      "name": "技术群",
+      "attributes": {},
+      "id": "node9",
+      "size": 20,
+      "category": 1
+    }, {
+      "name": "测试1",
+      "attributes": {},
+      "id": "node10",
+      "size": 20,
+      "url": "file://my-test1/index.html",
+      "category": 0
+    }, {
+      "name": "斗地主",
+      "attributes": {},
+      "id": "node11",
+      "size": 20,
+      "category": 2
+    }, {
+      "name": "连连看",
+      "attributes": {},
+      "id": "node12",
+      "size": 20,
+      "category":2
+    }, {
+      "name": "区块浏览器",
+      "url": "file://chain-browser/index.html",
+      "attributes": {},
+      "id": "node13",
+      "size": 35,
+      "category":0
+    }
+  ],
+  
+  "links": [
+    {
+      "source": "node10",
+      "target": "node13"
+    }, 
+    {
+      "source": "node1",
+      "target": "node2"
+    }, {
+      "source": "node3",
+      "target": "node4"
+    }, {
+      "source": "node4",
+      "target": "node5"
+    }, {
+      "source": "node1",
+      "target": "node6"
+    }, {
+      "source": "node1",
+      "target": "node7"
+    }, {
+      "source": "node7",
+      "target": "node8"
+    }, {
+      "source": "node7",
+      "target": "node9"
+    }, {
+      "source": "node4",
+      "target": "node10"
+    }, {
+      "source": "node11",
+      "target": "node12"
+    }
+  ]
+}
