@@ -25,22 +25,34 @@ window.onload = function() {
     $(".page").removeClass("active");
     $("#frame_" + id).addClass("active");
     localStorage.setItem("currentPage", "#frame_" + id);
+    console.log('store frame:',"frame_" + id);
     store("frame_" + id);
   }
-
-  // $("#nav_block").trigger("click");
+  //init
+  $("#nav_account").trigger("click");
 
   $("#input_search").css("color", "#f60");
   $("#input_search").css("font-size", "0.95rem");
 
   LRS._sendAsyn({ command: "tee_base_pubAddr" });
   //getInfo
-  let btn_getInfo = getElement("frame_test", "btn_getInfo");
-  btn_getInfo.onclick = function() {
-    if (tee_address) {
-      LRS._sendAsyn({ command: "tee_base_getInfo", msg: tee_address });
+  // let btn_getInfo = getElement("frame_test", "btn_getInfo");
+  // btn_getInfo.onclick = function() {
+  //   if (tee_address) {
+  //     var params="addr="+tee_address
+  //     LRS._sendAsyn({ command: "tee_base_getInfo", msg: params });
+  //   } else {
+  //     alert("未查询到tee地址");
+  //   }
+  // };
+
+  var getInfo = function(addr) {
+    if (addr) {
+      //地址校验todo
+      var params = "addr=" + addr;
+      LRS._sendAsyn({ command: "tee_base_getInfo", msg: params });
     } else {
-      alert("未查询到tee地址");
+      alert("地址不合法");
     }
   };
 
@@ -48,7 +60,7 @@ window.onload = function() {
     console.log("pubAddr-asyn-reply:", retMsg);
     tee_address = retMsg.data;
     if (tee_address) {
-      $("#input_search").val(tee_address);
+      getInfo(tee_address);
     }
   });
 
@@ -56,11 +68,70 @@ window.onload = function() {
     var payload = is_checksum(retMsg.data.body);
     if (payload) {
       var info = FtAccState.fromStream(payload);
+
       console.log("info-asyn-reply:", info.V);
+      //todo render account.html
+      renderAccount(info.V);
     } else {
       console.log("bad checksum");
     }
   });
+
+  var renderAccount = function(data) {
+    getElement("frame_account", "account").innerHTML = data.account.toString(
+      "latin1"
+    );
+    getElement("frame_account", "link_no").innerHTML = data.link_no;
+    getElement("frame_account", "search").innerHTML = data.search;
+    getElement("frame_account", "timestamp").innerHTML = timestampToDate(
+      data.timestamp
+    );
+    //动态UI
+    var found = data.found.V;
+    var divContent = getElement("frame_account", "content");
+    for (var i = 0; i < found.length; i++) {
+      var f = found[i];
+      //divRow
+      var divRow = document.createElement("div");
+      divRow.classList.add("row");
+
+      //编号
+      var divNo = document.createElement("div");
+      divNo.classList.add("col-md-2");
+      // divNo.style.overflow="hidden";
+      divNo.innerHTML = i + 1;
+      divRow.appendChild(divNo);
+      //高度
+      var divHeight = document.createElement("div");
+      divHeight.classList.add("col-md-2");
+      var spanHeight = document.createElement("span");
+      spanHeight.classList.add("addr");
+      spanHeight.innerHTML = f.height;
+      spanHeight.onclick = function() {
+        searchBlockByHeight(this.innerHTML);
+      };
+      divHeight.appendChild(spanHeight);
+      divRow.appendChild(divHeight);
+      //uock
+      var divUock = document.createElement("div");
+      divUock.classList.add("col-md");
+      var spanUock = document.createElement("span");
+      spanUock.classList.add("addr");
+      spanUock.innerHTML = bufToHexStr(f.uock);
+      spanUock.onclick = function() {
+        //todo
+      };
+      divUock.appendChild(spanUock);
+      divRow.appendChild(divUock);
+      //金额-数量
+      var divValue = document.createElement("div");
+      divValue.classList.add("col-md");
+      divValue.innerHTML = f.value;
+      divRow.appendChild(divValue);
+
+      divContent.appendChild(divRow);
+    }
+  };
 
   //获取blocks数据
   var getDefaultBlocks = function() {
@@ -85,7 +156,6 @@ window.onload = function() {
       console.log("blocks-asyn-reply:", blocks.V);
       //异步获取到数据后，前端渲染
       blocks_ = blocks.V;
-      // window.blocks_ = blocks_;
       renderBlocks(blocks_);
     } else {
       console.log("bad checksum");
@@ -93,7 +163,6 @@ window.onload = function() {
   });
 
   var renderBlocks = function(data) {
-    console.log("ready render");
     var heights = data.heights.V;
     var headers = data.headers.V;
     var content = getElement("frame_block", "content");
@@ -136,10 +205,10 @@ window.onload = function() {
 
       content.appendChild(divP);
     }
-    console.log("content:", content);
   };
 
   var clickHeightForBlock = function(e) {
+    console.log("clickHeightForBlock e:", e);
     $(".page").removeClass("active");
     $("#frame_blockdetail").addClass("active");
     renderBlockdetailDefault(e.target.innerHTML);
@@ -153,8 +222,6 @@ window.onload = function() {
   btn_search.onclick = function() {
     var height_search = $("#input_search").val();
     if (!/^\d+$/.test(height_search)) return;
-    console.log("height_search:", height_search);
-    // renderBlockdetail(height_search);
     searchBlockByHeight(height_search);
   };
 
@@ -177,19 +244,9 @@ window.onload = function() {
       $(".page").removeClass("active");
       $("#frame_blockdetail").addClass("active");
       renderBlockdetailDefault(search_height);
-      // fillValue(block_);
-      // renderBlocks(blocks_);
-      // renderBlockdetail();
     } else {
       console.log("bad checksum");
     }
-    //数据获取
-
-    // renderBlockdetail(height_search);
-    // $(".page").removeClass("active");
-    // $("#frame_blockdetail").addClass("active");
-    // // // //测试使用，正式环境，删除
-    // store("frame_blockdetail");
   });
 
   //frame_blockdetail
@@ -210,10 +267,6 @@ window.onload = function() {
     if (!header) return;
     getElement("frame_blockdetail", "version").innerHTML = header.version;
     getElement("frame_blockdetail", "link_no").innerHTML = header.link_no;
-    console.log(
-      "header.prev_block.toString():",
-      bufToHexStr(header.prev_block)
-    );
     getElement("frame_blockdetail", "prev_block").innerHTML = bufToHexStr(
       header.prev_block
     );
@@ -277,8 +330,21 @@ window.onload = function() {
   // back
   var img_back = getElement("frame_blockdetail", "img_back");
   img_back.onclick = function() {
-    $(".page").removeClass("active");
-    $("#frame_block").addClass("active");
+    console.log("currentFrame:",localStorage.getItem("currentFrame"));
+    var currentFrame=localStorage.getItem("currentFrame");
+    var frameName=currentFrame.split("_")[1];
+    console.log("frameName:",frameName);
+    $("#nav_"+frameName).trigger("click");
+    // $(".page").removeClass("active");
+    // $("#frame_block").addClass("active");
+    // localStorage.getItem("currentFrame");
+    // console.log("currentFrame:",currentFrame);
+    // $("#" + currentFrame).addClass("active");
+    
+    // alert(currentFrame);
+    // store(currentFrame);
+    // console.log('11');
+    // window.history.go(-1);
   };
 
   function store(currentFrame) {

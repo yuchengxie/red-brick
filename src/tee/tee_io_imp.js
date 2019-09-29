@@ -39,7 +39,8 @@ var _base = function(ev, msg) {
     console.log("getInfo msg:", msg);
     var pubAddr = msg.msg;
     //http网络请求
-    var url = WEB_SERVER_ADDR + "/txn/state/account?addr=" + pubAddr;
+    var url = WEB_SERVER_ADDR + "/txn/state/account?" + msg.msg;
+    
     server.getInfo(ev, msg, url);
   } else if (subcmd == "getBlocks") {
     var url = WEB_SERVER_ADDR + "/txn/state/block?" + msg.msg;

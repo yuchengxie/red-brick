@@ -16,52 +16,29 @@
     <div class="container">
       <h3>账户信息</h3>
       <hr />
-      <div class="col-md-12" style="background-color: transparent;line-height: 50px"
+      <div
+        class="col-md-12"
+        style="background-color: transparent;line-height: 50px"
       >
         <div class="row justify-content-center" style="overflow-x: hidden">
-            地址:<a href="">13U4DyvTXgFy9TfcS3RaRt9cecKd1WAXk6BPnHC6akU8y7YWafgdVPR</a>
+          地址:<span id="account" class="addr"></span>
         </div>
         <div class="row" style="background-color: transparent">
-          <div class="col-md">编号(link_no):0</div>
-          <div class="col-md">查询(search):1024</div>
-          <div class="col-md-5">时间:2019-09-26:08:08:08</div>
+          <div class="col-md">编号(link_no):<span id="link_no"></span></div>
+          <div class="col-md">查询(search):<span id="search"></span></div>
+          <div class="col-md-5">时间:<span id="timestamp"></span></div>
         </div>
         <div class="row justify-content-center">
-           结果(founds):
+          结果(founds):
         </div>
-        <div class="row" style="overflow-y: hidden;" >
-            <div class="col-md">序号</div>
-            <div class="col-md">高度(height)</div>
-            <div class="col-md">编号(uock)</div>
-            <div class="col-md">金额(value)</div>
+        <div class="row" style="overflow: hidden;">
+          <div class="col-md-2">序号</div>
+          <div class="col-md-2">高度</div>
+          <div class="col-md">编号(uock)</div>
+          <div class="col-md">金额(value)</div>
         </div>
-        <div id="founds">
-          <div class="row">
-              <div class="col-md">1</div>
-              <div class="col-md"><a href="">46106</a></div>
-              <div class="col-md"><a href="">123abc00000</a></div>
-              <div class="col-md">60.5032405</div>
-          </div>
-          <div class="row">
-              <div class="col-md">100</div>
-              <div class="col-md"><a href="">46106</a></div>
-              <div class="col-md"><a href="">123abc00000</a></div>
-              <div class="col-md">60.5032405</div>
-          </div>
-          <div class="row">
-              <div class="col-md">200</div>
-              <div class="col-md"><a href="">46106</a></div>
-              <div class="col-md"><a href="">123abc00000</a></div>
-              <div class="col-md">60.5032405</div>
-          </div>
-          <div class="row">
-              <div class="col-md">300</div>
-              <div class="col-md"><a href="">46106</a></div>
-              <div class="col-md"><a href="">123abc00000</a></div>
-              <div class="col-md">60.5032405</div>
-          </div>
-          
-         
+        <div id="content">
+        </div>
       </div>
     </div>
   </body>
@@ -74,5 +51,11 @@
 <style>
   [class*="col-md"] {
     border: 1px solid #eee;
+  }
+  .addr {
+    color: #4498fb;
+  }
+  .addr:hover {
+    text-decoration: underline;
   }
 </style>

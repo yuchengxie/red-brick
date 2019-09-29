@@ -1,4 +1,3 @@
-// import dhttp from "dhttp"
 const dhttp = require("dhttp");
 
 function getInfo(ev, msg, url) {
