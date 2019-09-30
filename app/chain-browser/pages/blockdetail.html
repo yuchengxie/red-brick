@@ -24,48 +24,50 @@
       <hr />
       <h5>基本信息</h5>
       <div id="content" class="row no-gutters justify-content-around">
-        <div class="col-md-6">
-          <div class="row mr-5 no-gutters line">
-            <span class="des">版本:</span>
-            <span class="con" id="version"></span>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="row mr-5 no-gutters line">
+              <span class="des">版本:</span>
+              <span class="con" id="version"></span>
+            </div>
+            <div class="row mr-5 no-gutters line">
+              <span class="des">link_no:</span>
+              <span class="con" id="link_no"></span>
+            </div>
+            <div class="row mr-5 no-gutters line-long">
+              <span class="des">上一区块哈希:</span>
+              <span class="link" id="prev_block"></span>
+            </div>
+            <div class="row mr-5 no-gutters line-long">
+              <span class="des">默克尔根:</span>
+              <span id="merkle_root" class="con"></span>
+            </div>
+            <div class="row mr-5 no-gutters line">
+              <span class="des">时间戳:</span>
+              <span class="con" id="timestamp"></span>
+            </div>
           </div>
-          <div class="row mr-5 no-gutters line">
-            <span class="des">link_no:</span>
-            <span class="con" id="link_no"></span>
-          </div>
-          <div class="row mr-5 no-gutters line-long">
-            <span class="des">上一区块哈希:</span>
-            <span class="link" id="prev_block"></span>
-          </div>
-          <div class="row mr-5 no-gutters line-long">
-            <span class="des">默克尔根:</span>
-            <span id="merkle_root" class="con"></span>
-          </div>
-          <div class="row mr-5 no-gutters line">
-            <span class="des">时间戳:</span>
-            <span class="con" id="timestamp"></span>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="row mr-5 no-gutters line">
-            <span class="des">难度:</span>
-            <span class="con" id="bits"></span>
-          </div>
-          <div class="row mr-5 no-gutters line">
-            <span class="des">交易数量:</span>
-            <span class="link" id="txn_count"></span>
-          </div>
-          <div class="row mr-5 no-gutters line">
-            <span class="des">随机值:</span>
-            <span class="con" id="nonce"></span>
-          </div>
-          <div class="row mr-5 no-gutters line-long">
-            <span class="des">矿工:</span>
-            <span id="miner" class="con"></span>
-          </div>
-          <div class="row mr-5 no-gutters line-long">
-            <span class="des">Tee签名:</span>
-            <span id="sig_tee" class="con"> </span>
+          <div class="col-md-6">
+            <div class="row mr-5 no-gutters line">
+              <span class="des">难度:</span>
+              <span class="con" id="bits"></span>
+            </div>
+            <div class="row mr-5 no-gutters line">
+              <span class="des">交易数量:</span>
+              <span class="link" id="txn_count"></span>
+            </div>
+            <div class="row mr-5 no-gutters line">
+              <span class="des">随机值:</span>
+              <span class="con" id="nonce"></span>
+            </div>
+            <div class="row mr-5 no-gutters line-long">
+              <span class="des">矿工:</span>
+              <span id="miner" class="con"></span>
+            </div>
+            <div class="row mr-5 no-gutters line-long">
+              <span class="des">Tee签名:</span>
+              <span id="sig_tee" class="con"> </span>
+            </div>
           </div>
         </div>
       </div>
@@ -79,6 +81,7 @@
   .line {
     height: 50px;
     line-height: 50px;
+    width: 100%;
     justify-content: space-between;
     border-bottom: 1px solid #eee;
   }

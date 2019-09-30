@@ -52,7 +52,6 @@ var _base = function(ev, msg) {
     server.getBlock(ev, msg, url);
   } else if (subcmd == "getUtxo") {
     var url = WEB_SERVER_ADDR + "/txn/state/uock?" + msg.msg;
-    console.log("utxo url:", url);
     server.getUtxo(ev, msg, url);
   }
 };

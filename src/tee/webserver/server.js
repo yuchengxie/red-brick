@@ -60,6 +60,16 @@ function getBlocks(ev, msg, url) {
 
 function getUtxo(ev, msg, url) {
   ret = { command: msg.command, data: "", error: "" };
+  // url='http://raw0.nb-chain.net/txn/state/uock?addr=11144Q9KHcPvhTNNA8SncVJSXCXmN3DeqqEPeppAR2kKxjDHdmGHhX&num=0&uock=00e9660000100001';
+  // url='http://raw0.nb-chain.net/txn/state/uock?addr=13U4DyvTXgFy9TfcS3RaRt9cecKd1WAXk6BPnHC6akU8y7YWafgdVPR&num=0&uock=01001000007db400';
+  // url='http://raw0.nb-chain.net/txn/state/uock?addr=13U4DyvTXgFy9TfcS3RaRt9cecKd1WAXk6BPnHC6akU8y7YWafgdVPR&num=0&uock=00b47d0000100001';
+  // 0013e3b000000000
+  // url='http://raw0.nb-chain.net/txn/state/uock\?uock\=00b47d0000000000';
+  //source: 01001000007db400
+  // 00b47d0000100001
+  // url='http://raw0.nb-chain.net/txn/state/uock?uock=013e3b0000000000'
+  // url='http://raw0.nb-chain.net/txn/state/uock?addr=13U4DyvTXgFy9TfcS3RaRt9cecKd1WAXk6BPnHC6akU8y7YWafgdVPR&num=5'
+  console.log("utxo url:", url);
   dhttp(
     {
       url: url,

@@ -1,3 +1,3 @@
-http://user1-node.nb-chain.net/txn/state/block?&hash=0000000000000000000000000000000000000000000000
+1.http://user1-node.nb-chain.net/txn/state/block?&hash=0000000000000000000000000000000000000000000000
 000000000000000000&hi=-1&hi=-2&hi=-3&hi=-4&hi=-5
-http://user1-node.nb-chain.net/txn/state/block?hi=111
+2.http://user1-node.nb-chain.net/txn/state/block?hi=111

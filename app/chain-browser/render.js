@@ -6,8 +6,11 @@ window.onload = function() {
   var tee_address = "";
   var currentFrame =
     this.localStorage.getItem("currentFrame") || "frame_account";
+  // var currentFrame =
+  //   this.localStorage.getItem("currentFrame");
 
   $(".page").removeClass("active");
+  console.log("currentframe:", currentFrame);
   $("#" + currentFrame).addClass("active");
 
   //init
@@ -15,6 +18,7 @@ window.onload = function() {
   $(window).resize(function() {
     $("iframe").height($(document).height());
   });
+
   //注册单页切换事件
   $("#nav_block").click(tab);
   $("#nav_account").click(tab);
@@ -25,26 +29,25 @@ window.onload = function() {
     $(".page").removeClass("active");
     $("#frame_" + id).addClass("active");
     localStorage.setItem("currentPage", "#frame_" + id);
-    console.log('store frame:',"frame_" + id);
     store("frame_" + id);
   }
   //init
-  $("#nav_account").trigger("click");
+  // $("#nav_account").trigger("click");
 
   $("#input_search").css("color", "#f60");
   $("#input_search").css("font-size", "0.95rem");
 
   LRS._sendAsyn({ command: "tee_base_pubAddr" });
   //getInfo
-  // let btn_getInfo = getElement("frame_test", "btn_getInfo");
-  // btn_getInfo.onclick = function() {
-  //   if (tee_address) {
-  //     var params="addr="+tee_address
-  //     LRS._sendAsyn({ command: "tee_base_getInfo", msg: params });
-  //   } else {
-  //     alert("未查询到tee地址");
-  //   }
-  // };
+  let btn_getInfo = getElement("frame_test", "btn_getInfo");
+  btn_getInfo.onclick = function() {
+    if (tee_address) {
+      var params = "addr=" + tee_address;
+      LRS._sendAsyn({ command: "tee_base_getInfo", msg: params });
+    } else {
+      alert("未查询到tee地址");
+    }
+  };
 
   var getInfo = function(addr) {
     if (addr) {
@@ -117,16 +120,18 @@ window.onload = function() {
       divUock.classList.add("col-md");
       var spanUock = document.createElement("span");
       spanUock.classList.add("addr");
-      spanUock.innerHTML = bufToHexStr(f.uock);
+      spanUock.innerHTML = bufToHexStr(f.uock.reverse());
       spanUock.onclick = function() {
         //todo
+        // alert('11');
+        getUtxoByUock(this.innerHTML);
       };
       divUock.appendChild(spanUock);
       divRow.appendChild(divUock);
       //金额-数量
       var divValue = document.createElement("div");
       divValue.classList.add("col-md");
-      divValue.innerHTML = f.value;
+      divValue.innerHTML = f.value / 100000000 + " NBC";
       divRow.appendChild(divValue);
 
       divContent.appendChild(divRow);
@@ -135,7 +140,11 @@ window.onload = function() {
 
   //获取blocks数据
   var getDefaultBlocks = function() {
-    var h = [-1, -2, -3, -4, -5];
+    var h = [];
+    for (var i = 1; i < 10; i++) {
+      h.push(-i);
+    }
+    // var h = [-1, -2, -3, -4, -5];
     var height = "";
     for (var i = 0; i < h.length; i++) {
       height += "&hi=" + h[i];
@@ -156,6 +165,7 @@ window.onload = function() {
       console.log("blocks-asyn-reply:", blocks.V);
       //异步获取到数据后，前端渲染
       blocks_ = blocks.V;
+      window.blocks_ = blocks_;
       renderBlocks(blocks_);
     } else {
       console.log("bad checksum");
@@ -184,7 +194,11 @@ window.onload = function() {
       divHeightspan.classList.add("blockheight");
       //2.1动态添加id和点击事件
       divHeightspan.setAttribute("id", "height" + divHeightspan.innerHTML);
-      divHeightspan.onclick = clickHeightForBlock;
+      // divHeightspan.onclick = clickHeightForBlock;
+      divHeightspan.onclick = function() {
+        if (!this.innerHTML) return;
+        searchBlockByHeight(this.innerHTML);
+      };
       divHeight.appendChild(divHeightspan);
       divP.appendChild(divHeight);
       //3.时间
@@ -208,10 +222,10 @@ window.onload = function() {
   };
 
   var clickHeightForBlock = function(e) {
-    console.log("clickHeightForBlock e:", e);
-    $(".page").removeClass("active");
-    $("#frame_blockdetail").addClass("active");
-    renderBlockdetailDefault(e.target.innerHTML);
+    // console.log('存储了frame:',"frame_blockdetail");
+    // $(".page").removeClass("active");
+    // $("#frame_blockdetail").addClass("active");
+    // renderBlockdetailDefault(e.target.innerHTML);
     //测试使用，正式环境，删除
     // store("frame_blockdetail");
   };
@@ -223,6 +237,11 @@ window.onload = function() {
     var height_search = $("#input_search").val();
     if (!/^\d+$/.test(height_search)) return;
     searchBlockByHeight(height_search);
+  };
+
+  var searchBlockByHash = function(hash) {
+    var params = "&hash=" + hash;
+    LRS._sendAsyn({ command: "tee_base_getBlock", msg: params });
   };
 
   var searchBlockByHeight = function(height) {
@@ -238,11 +257,10 @@ window.onload = function() {
       //异步获取到数据后，前端渲染
       search_block_ = block.V;
       var search_height = search_block_.heights.V[0].V;
-      // window.block_ = block_;
-      console.log("block-asyn-reply height", search_block_.heights.V[0].V);
-      console.log("block-asyn-reply header", search_block_.headers.V[0].V);
       $(".page").removeClass("active");
       $("#frame_blockdetail").addClass("active");
+      //测试临时用
+      store("frame_blockdetail");
       renderBlockdetailDefault(search_height);
     } else {
       console.log("bad checksum");
@@ -255,11 +273,11 @@ window.onload = function() {
     hi.innerHTML = "#" + height;
     var index = getBlockIndex(blocks_, height);
     if (index > -1) {
-      console.log("index:", index);
       block_ = blocks_.headers.V[index].V;
     } else {
       block_ = search_block_.headers.V[0].V;
     }
+    window.block_ = block_;
     fillValue(block_);
   }
 
@@ -267,9 +285,15 @@ window.onload = function() {
     if (!header) return;
     getElement("frame_blockdetail", "version").innerHTML = header.version;
     getElement("frame_blockdetail", "link_no").innerHTML = header.link_no;
-    getElement("frame_blockdetail", "prev_block").innerHTML = bufToHexStr(
-      header.prev_block
-    );
+    var prev_block = getElement("frame_blockdetail", "prev_block");
+    prev_block.innerHTML = bufToHexStr(header.prev_block);
+    prev_block.onclick = function() {
+      // alert(this.innerHTML);
+      searchBlockByHash(this.innerHTML);
+    };
+    // getElement("frame_blockdetail", "prev_block").innerHTML = bufToHexStr(
+    //   header.prev_block
+    // );
     getElement("frame_blockdetail", "merkle_root").innerHTML = bufToHexStr(
       header.merkle_root
     );
@@ -287,7 +311,7 @@ window.onload = function() {
     );
   };
 
-  //getUtxo
+  //getUtxo-测试
   var btn_getUtxo = getElement("frame_test", "btn_getUtxo");
   btn_getUtxo.onclick = function() {
     if (tee_address) {
@@ -297,54 +321,37 @@ window.onload = function() {
       LRS._sendAsyn({ command: "tee_base_getUtxo", msg: params });
     }
   };
+
+  var getUtxoByAddr = function() {
+    if (tee_address) {
+      var addr = "&addr=" + tee_address;
+      var num = "&num=5";
+      var params = addr + num;
+      LRS._sendAsyn({ command: "tee_base_getUtxo", msg: params });
+    }
+  };
+
+  var getUtxoByUock = function(uock) {
+    var params = "&uock=" + uock;
+    LRS._sendAsyn({ command: "tee_base_getUtxo", msg: params });
+  };
   LRS._on("utxo-asyn-reply", (ev, retMsg) => {
     var payload = is_checksum(retMsg.data.body);
     if (payload) {
       var utxo = FtUtxoState.fromStream(payload);
       window.utxo = utxo;
-      console.log("info-asyn-reply:", utxo.V);
+      console.log("utxo-asyn-reply:", utxo.V);
     } else {
       console.log("bad checksum");
     }
   });
 
-  /**
-   * block
-   */
-  //动态UI
-
-  // var heightEle = getElement("frame_block", "height1");
-  // heightEle.onclick = function(e) {
-  //   console.log(e.target.innerHTML);
-  //   var hi = e.target.innerHTML;
-  //   $(".page").removeClass("active");
-  //   $("#frame_blockdetail").addClass("active");
-  //   renderBlockdetail(hi);
-  //   // $("#input_search").val(parmsHeight);
-  //   // top.document.getElementById("input_search").innerHTML="11";
-  //   //todo 动态渲染blockdetai页面
-  //   // var doc=$("#frame_blockdetail").contentWindow.document;
-  //   // $(doc).append('<div class="append">通过append方法添加的元素</div>');
-  // };
-
   // back
   var img_back = getElement("frame_blockdetail", "img_back");
   img_back.onclick = function() {
-    console.log("currentFrame:",localStorage.getItem("currentFrame"));
-    var currentFrame=localStorage.getItem("currentFrame");
-    var frameName=currentFrame.split("_")[1];
-    console.log("frameName:",frameName);
-    $("#nav_"+frameName).trigger("click");
-    // $(".page").removeClass("active");
-    // $("#frame_block").addClass("active");
-    // localStorage.getItem("currentFrame");
-    // console.log("currentFrame:",currentFrame);
-    // $("#" + currentFrame).addClass("active");
-    
-    // alert(currentFrame);
-    // store(currentFrame);
-    // console.log('11');
-    // window.history.go(-1);
+    var currentFrame = localStorage.getItem("currentFrame");
+    var frameName = currentFrame.split("_")[1];
+    $("#nav_" + frameName).trigger("click");
   };
 
   function store(currentFrame) {
@@ -383,7 +390,7 @@ function bufToHexStr(buf) {
 }
 
 function timestampToDate(timestamp) {
-  var d = new Date(timestamp);
+  var d = new Date(timestamp * 1000);
   var year = d.getFullYear();
   var month = d.getMonth() + 1;
   var date = d.getDate();
