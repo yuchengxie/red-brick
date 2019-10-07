@@ -2,8 +2,8 @@ import TeeIO from "./tee_io";
 import tee from "./teeutil/index";
 import server from "./webserver/server";
 
-var WEB_SERVER_ADDR = "http://user1-node.nb-chain.net";
-// var WEB_SERVER_ADDR = "http://raw0.nb-chain.net";
+// var WEB_SERVER_ADDR = "http://user1-node.nb-chain.net";
+var WEB_SERVER_ADDR = "http://raw0.nb-chain.net";
 
 var _base = function(ev, msg) {
   if (!tee.getState()) return;
@@ -53,6 +53,9 @@ var _base = function(ev, msg) {
   } else if (subcmd == "getUtxo") {
     var url = WEB_SERVER_ADDR + "/txn/state/uock?" + msg.msg;
     server.getUtxo(ev, msg, url);
+  } else if (subcmd == "getBlockUtxo") {
+    var url = WEB_SERVER_ADDR + "/txn/state/uock?" + msg.msg;
+    server.getBlockUtxo(ev, msg, url);
   }
 };
 

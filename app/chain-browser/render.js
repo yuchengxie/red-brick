@@ -31,8 +31,6 @@ window.onload = function() {
     localStorage.setItem("currentPage", "#frame_" + id);
     store("frame_" + id);
   }
-  //init
-  // $("#nav_account").trigger("click");
 
   $("#input_search").css("color", "#f60");
   $("#input_search").css("font-size", "0.95rem");
@@ -123,8 +121,7 @@ window.onload = function() {
       spanUock.innerHTML = bufToHexStr(f.uock.reverse());
       spanUock.onclick = function() {
         //todo
-        // alert('11');
-        getUtxoByUock(this.innerHTML);
+        searchUTXOSByUock(this.innerHTML);
       };
       divUock.appendChild(spanUock);
       divRow.appendChild(divUock);
@@ -221,15 +218,6 @@ window.onload = function() {
     }
   };
 
-  var clickHeightForBlock = function(e) {
-    // console.log('存储了frame:',"frame_blockdetail");
-    // $(".page").removeClass("active");
-    // $("#frame_blockdetail").addClass("active");
-    // renderBlockdetailDefault(e.target.innerHTML);
-    //测试使用，正式环境，删除
-    // store("frame_blockdetail");
-  };
-
   getDefaultBlocks();
 
   //btn_search
@@ -256,44 +244,37 @@ window.onload = function() {
       console.log("block-asyn-reply:", block.V);
       //异步获取到数据后，前端渲染
       search_block_ = block.V;
-      var search_height = search_block_.heights.V[0].V;
+      // console.log("search_block_:", search_block_);
+      // var search_height = search_block_.heights.V[0].V;
       $(".page").removeClass("active");
       $("#frame_blockdetail").addClass("active");
       //测试临时用
-      store("frame_blockdetail");
-      renderBlockdetailDefault(search_height);
+      // store("frame_blockdetail");
+      renderBlockdetail(search_block_);
     } else {
       console.log("bad checksum");
     }
   });
 
-  //frame_blockdetail
-  function renderBlockdetailDefault(height) {
-    var hi = getElement("frame_blockdetail", "hi");
-    hi.innerHTML = "#" + height;
-    var index = getBlockIndex(blocks_, height);
-    if (index > -1) {
-      block_ = blocks_.headers.V[index].V;
-    } else {
-      block_ = search_block_.headers.V[0].V;
-    }
-    window.block_ = block_;
-    fillValue(block_);
-  }
+  function renderBlockdetail(block) {
+    var height = block.heights[0];
+    var txck = block.txcks[0];
+    var header = block.headers[0];
+    var txn_count = header.txn_count;
 
-  var fillValue = function(header) {
     if (!header) return;
+    getElement("frame_blockdetail", "hi").innerHTML = height;
+    getElement("frame_blockdetail", "txcks").innerHTML = bufToHexStr(txck);
     getElement("frame_blockdetail", "version").innerHTML = header.version;
     getElement("frame_blockdetail", "link_no").innerHTML = header.link_no;
     var prev_block = getElement("frame_blockdetail", "prev_block");
     prev_block.innerHTML = bufToHexStr(header.prev_block);
     prev_block.onclick = function() {
-      // alert(this.innerHTML);
       searchBlockByHash(this.innerHTML);
     };
-    // getElement("frame_blockdetail", "prev_block").innerHTML = bufToHexStr(
-    //   header.prev_block
-    // );
+    getElement("frame_blockdetail", "prev_block").innerHTML = bufToHexStr(
+      header.prev_block
+    );
     getElement("frame_blockdetail", "merkle_root").innerHTML = bufToHexStr(
       header.merkle_root
     );
@@ -309,10 +290,37 @@ window.onload = function() {
     getElement("frame_blockdetail", "sig_tee").innerHTML = bufToHexStr(
       header.sig_tee
     );
-  };
+    //txns
+    //1.get all uock
+    var UInt32_a = txck.readUInt32LE(0);
+    var UInt32_b = txck.readUInt32LE(4);
+
+    var blockId = (UInt32_b << 12) | (UInt32_a >>> 20);
+    outIndex = 0; //固定
+    // // txnIndex = 0, 1, 2 ...
+    // txnIndex = 0; //0,1,2 分别对应交易的数量
+    var uocks = [];
+    for (var i = 0; i < txn_count; i++) {
+      txnIndex = i;
+      lo4 = outIndex + (txnIndex << 20);
+      hi4 = blockId << 8;
+      buflo4 = Buffer.alloc(4);
+      buflo4.writeUInt32LE(lo4);
+      bufhi4 = Buffer.alloc(4);
+      bufhi4.writeUInt32LE(hi4);
+
+      buf = Buffer.concat([buflo4, bufhi4]);
+      var s1 = bufToHexStr(buf.reverse());
+      uocks.push(s1);
+    }
+    console.log("uocks:", uocks);
+    //根据计算出来的uock，查询数据
+    searchBlockUTXOByUock(uocks[0]);
+  }
 
   //getUtxo-测试
   var btn_getUtxo = getElement("frame_test", "btn_getUtxo");
+  btn_getUtxo.disabled = true;
   btn_getUtxo.onclick = function() {
     if (tee_address) {
       var addr = "&addr=" + tee_address;
@@ -322,33 +330,172 @@ window.onload = function() {
     }
   };
 
-  var getUtxoByAddr = function() {
-    if (tee_address) {
-      var addr = "&addr=" + tee_address;
-      var num = "&num=5";
-      var params = addr + num;
-      LRS._sendAsyn({ command: "tee_base_getUtxo", msg: params });
-    }
+  // var getUtxoByAddr = function() {
+  //   if (tee_address) {
+  //     var addr = "&addr=" + tee_address;
+  //     var num = "&num=5";
+  //     var params = addr + num;
+  //     LRS._sendAsyn({ command: "tee_base_getUtxo", msg: params });
+  //   }
+  // };
+
+  var searchBlockUTXOByUock = function(uock) {
+    var params = "&uock=" + uock;
+    LRS._sendAsyn({ command: "tee_base_getBlockUtxo", msg: params });
   };
 
-  var getUtxoByUock = function(uock) {
+  LRS._on("blockutxo-asyn-reply", (ev, retMsg) => {
+    var uock = retMsg.uock.split("=")[1];
+    // console.log("pass uock:", uock);
+    var payload = is_checksum(retMsg.data.body);
+    if (payload) {
+      var utxo = FtUtxoState.fromStream(payload);
+      window.utxo = utxo;
+      console.log("blockutxo-asyn-reply:", utxo.V);
+      // console.log("search_uock_:", search_uock_);
+      // var search_height = search_block_.heights.V[0].V;
+      // $(".page").removeClass("active");
+      // $("#frame_utxo").addClass("active");
+      //测试临时用
+      // store("frame_blockdetail");
+      // var txnContent = getElement("frame_utxo", "txnContent");
+      renderUtxo(utxo.V.txns.V, uock, "frame_blockdetail", "txnContent");
+      // renderBlockdetail(search_block_);
+    } else {
+      console.log("bad checksum");
+    }
+  });
+
+  var searchUTXOSByUock = function(uock) {
     var params = "&uock=" + uock;
     LRS._sendAsyn({ command: "tee_base_getUtxo", msg: params });
   };
   LRS._on("utxo-asyn-reply", (ev, retMsg) => {
+    var uock = retMsg.uock.split("=")[1];
+    console.log("pass uock:", uock);
     var payload = is_checksum(retMsg.data.body);
     if (payload) {
       var utxo = FtUtxoState.fromStream(payload);
       window.utxo = utxo;
       console.log("utxo-asyn-reply:", utxo.V);
+      // console.log("search_uock_:", search_uock_);
+      // var search_height = search_block_.heights.V[0].V;
+      $(".page").removeClass("active");
+      $("#frame_utxo").addClass("active");
+      //测试临时用
+      // store("frame_blockdetail");
+      // var txnContent = getElement("frame_utxo", "txnContent");
+      renderUtxo(utxo.V.txns.V, uock, "frame_utxo", "txnContent");
+      // renderBlockdetail(search_block_);
     } else {
       console.log("bad checksum");
     }
   });
 
   // back
-  var img_back = getElement("frame_blockdetail", "img_back");
-  img_back.onclick = function() {
+  var img_back_utxo = getElement("frame_utxo", "img_back");
+  img_back_utxo.onclick = function() {
+    var currentFrame = localStorage.getItem("currentFrame");
+    var frameName = currentFrame.split("_")[1];
+    $("#nav_" + frameName).trigger("click");
+  };
+
+  var renderUtxo = function(txns, uock, frname, elename) {
+    if (!txns || !txns.constructor == Array) return;
+    // var txnContent = getElement("frame_utxo", "txnContent");
+    var txnContent = getElement(frname, elename);
+    txnContent.innerHTML = ""; //清空子元素
+    var parent = document.createElement("div");
+    parent.classList.add("row", "mt-3", "b");
+    //uock
+    var uock = divColmd("uock:" + uock);
+    parent.appendChild(uock);
+    parent.appendChild(w100());
+    for (var i = 0; i < txns.length; i++) {
+      var txn = txns[i];
+      var txn_in = txn.tx_in;
+      //input
+      for (var j = 0; j < txn_in.length; j++) {
+        var _in = txn_in[j].V;
+        parent.appendChild(divColmd("输入 " + (j + 1)));
+        parent.appendChild(w100());
+        parent.appendChild(divColmd2("index:" + _in.prev_output.V.index));
+        parent.appendChild(
+          divColmd("prevhash:" + bufToHexStr(_in.prev_output.V.hash))
+        );
+        parent.appendChild(w100());
+      }
+      //output
+      var txn_out = txn.tx_out;
+      for (var k = 0; k < txn_out.length; k++) {
+        var _out = txn_out[k].V;
+        parent.appendChild(divColmd("输出 " + (k + 1)));
+        parent.appendChild(w100());
+        parent.appendChild(divColmd2("value:" + _out.value / 100000000));
+        var _pk_script = _process(bufToHexStr(_out.pk_script));
+        parent.appendChild(
+          divColmd("pk_script:" + _pk_script)
+        );
+        parent.appendChild(w100());
+      }
+    }
+    txnContent.appendChild(parent);
+    // var txnContent = getElement("frame_utxo", "txnContent");
+    // var parent = document.createElement("div");
+    // parent.classList.add("row", "mt-3", "b");
+    //uock
+    // var uock = divColmd("uock:12000abc123123");
+    // parent.appendChild(uock);
+    // parent.appendChild(w100());
+    // console.log("txn.tx_in:", txn.tx_in);
+    // //input
+    // console.log("in:", txn.tx_in);
+    // for (var i = 0; i < txn.tx_in.length; i++) {
+    //   var _in = txn.in[i];
+    //   parent.appendChild(divColmd("输入 " + (i + 1)));
+    //   parent.appendChild(w100());
+    //   parent.appendChild(divColmd2("index:" + _in.index));
+    //   parent.appendChild(divColmd("prevhash:" + _in.prevhash));
+    //   parent.appendChild(w100());
+    // }
+    // //output
+    // console.log("out:", txn.out);
+    // for (var i = 0; i < txn.out.length; i++) {
+    //   var _out = txn.out[i];
+    //   parent.appendChild(divColmd("输出 " + (i + 1)));
+    //   parent.appendChild(w100());
+    //   parent.appendChild(divColmd2("value:" + _out.value));
+    //   parent.appendChild(divColmd("script:" + _out.script));
+    //   parent.appendChild(w100());
+    // }
+
+    // txnContent.appendChild(parent);
+  };
+
+  var w100 = function() {
+    var w100 = document.createElement("div");
+    w100.classList.add("w-100");
+    return w100;
+  };
+
+  var divColmd = function(v) {
+    var divcolmd = document.createElement("div");
+    divcolmd.classList.add("col-md");
+    divcolmd.style.wordBreak = "break-all";
+    divcolmd.innerHTML = v;
+    return divcolmd;
+  };
+  var divColmd2 = function(v) {
+    var divcolmd = document.createElement("div");
+    divcolmd.classList.add("col-md-3", "a");
+    divcolmd.innerHTML = v;
+    divcolmd.style.wordBreak = "break-all";
+    return divcolmd;
+  };
+
+  // back
+  var img_back_blockdetail = getElement("frame_blockdetail", "img_back");
+  img_back_blockdetail.onclick = function() {
     var currentFrame = localStorage.getItem("currentFrame");
     var frameName = currentFrame.split("_")[1];
     $("#nav_" + frameName).trigger("click");
@@ -357,6 +504,10 @@ window.onload = function() {
   function store(currentFrame) {
     localStorage.setItem("currentFrame", currentFrame);
   }
+
+  //测试-删除
+  // $("#nav_account").trigger("click");
+  // searchBlockByHeight(46106);
 };
 
 function getElement(frameId, eleId) {

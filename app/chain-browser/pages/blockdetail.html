@@ -23,54 +23,74 @@
       </div>
       <hr />
       <h5>基本信息</h5>
-      <div id="content" class="row no-gutters justify-content-around">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="row mr-5 no-gutters line">
+      <div id="content" style="display:''">
+        <div class="row no-gutters justify-content-around">
+          <div class="col-md-5">
+            <div class="row  no-gutters line">
               <span class="des">版本:</span>
               <span class="con" id="version"></span>
             </div>
-            <div class="row mr-5 no-gutters line">
+            <div class="row  no-gutters line">
               <span class="des">link_no:</span>
               <span class="con" id="link_no"></span>
             </div>
-            <div class="row mr-5 no-gutters line-long">
+            <div class="row  no-gutters line-long">
               <span class="des">上一区块哈希:</span>
               <span class="link" id="prev_block"></span>
             </div>
-            <div class="row mr-5 no-gutters line-long">
+            <div class="row  no-gutters line-long">
               <span class="des">默克尔根:</span>
               <span id="merkle_root" class="con"></span>
             </div>
-            <div class="row mr-5 no-gutters line">
+            <div class="row  no-gutters line">
               <span class="des">时间戳:</span>
               <span class="con" id="timestamp"></span>
             </div>
-          </div>
-          <div class="col-md-6">
-            <div class="row mr-5 no-gutters line">
+            <div class="row  no-gutters line">
               <span class="des">难度:</span>
               <span class="con" id="bits"></span>
             </div>
-            <div class="row mr-5 no-gutters line">
+          </div>
+          <div class="col-md-5">
+            <div class="row  no-gutters line">
               <span class="des">交易数量:</span>
               <span class="link" id="txn_count"></span>
             </div>
-            <div class="row mr-5 no-gutters line">
+            <div class="row  no-gutters line">
+              <span class="des">交易编号:</span>
+              <span class="link" id="txcks"></span>
+            </div>
+            <div class="row  no-gutters line">
               <span class="des">随机值:</span>
               <span class="con" id="nonce"></span>
             </div>
-            <div class="row mr-5 no-gutters line-long">
+            <div class="row  no-gutters line-long">
               <span class="des">矿工:</span>
               <span id="miner" class="con"></span>
             </div>
-            <div class="row mr-5 no-gutters line-long">
+            <div class="row  no-gutters line-long">
               <span class="des">Tee签名:</span>
               <span id="sig_tee" class="con"> </span>
             </div>
           </div>
         </div>
       </div>
+      <br />
+      <hr />
+      <h5>交易信息</h5>
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <!-- <li class="page-item"><a class="page-link">Previous</a></li> -->
+          <li class="page-item"><a class="page-link">1</a></li>
+          <li class="page-item"><a class="page-link">2</a></li>
+          <li class="page-item"><a class="page-link">3</a></li>
+          <li class="page-item"><a class="page-link">4</a></li>
+          <li class="page-item"><a class="page-link">5</a></li>
+          <li class="page-item"><a class="page-link">6</a></li>
+          <!-- <li class="page-item"><a class="page-link">Next</a></li> -->
+        </ul>
+      </nav>
+      <div class="container" id="txnContent"></div>
     </div>
   </body>
 </html>
@@ -106,5 +126,29 @@
   }
   .con {
     color: #444;
+  }
+
+  .line-1 {
+    height: 40px;
+    line-height: 40px;
+    width: 100%;
+    justify-content: space-between;
+    word-break: break-all;
+    /* border-bottom: 1px solid #eee; */
+  }
+
+  #txnContent [class*="col"] {
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+  }
+
+  .b {
+    line-height: 35px;
+    background: #f4f4f4;
+    box-shadow: 0px 5px 5px #ddd;
+    border-radius: 10px;
+  }
+  .a {
+    padding-left: 25px;
   }
 </style>

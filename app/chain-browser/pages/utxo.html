@@ -15,29 +15,46 @@
   </head>
   <body>
     <div class="container">
-      <h1 style="color:red">utxo.html</h1>
-      <h1>utxo.html</h1>
-      <h1>utxo.html</h1>
-      <h1>utxo.html</h1>
-      <h1>utxo.html</h1>
-      <h1>utxo.html</h1>
-      <h1>utxo.html</h1>
-      <h1>utxo.html</h1>
-      <h1>utxo.html</h1>
-      <h1>utxo.html</h1>
-      <h1>utxo.html</h1>
-      <h1>utxo.html</h1>
-      <h1>utxo.html</h1>
-      <h1>utxo.html</h1>
-      <h1>utxo.html</h1>
-      <h1>utxo.html</h1>
-      <h1>utxo.html</h1>
-      <h1>utxo.html</h1>
-      <h1>utxo.html</h1>
-      <h1>utxo.html</h1>
-      <h1>utxo.html</h1>
+      <div class="row">
+        <img
+          id="img_back"
+          src="../../static/nav_back.png"
+          style="height: 30px;width:30px"
+        />
+        <h3 style="margin-left:16px">交易信息</h3>
+        <h3 id="hi"></h3>
+      </div>
+      <hr />
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <!-- <li class="page-item"><a class="page-link">Previous</a></li> -->
+          <li class="page-item"><a class="page-link">1</a></li>
+          <li class="page-item"><a class="page-link">2</a></li>
+          <li class="page-item"><a class="page-link">3</a></li>
+          <li class="page-item"><a class="page-link">4</a></li>
+          <li class="page-item"><a class="page-link">5</a></li>
+          <li class="page-item"><a class="page-link">6</a></li>
+          <!-- <li class="page-item"><a class="page-link">Next</a></li> -->
+        </ul>
+      </nav>
+      <div class="container" id="txnContent"></div>
     </div>
   </body>
 </html>
 
-<script></script>
+<style>
+  #txnContent [class*="col"] {
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+  }
+
+  .b {
+    line-height: 35px;
+    background:#F4F4F4;
+    box-shadow: 0px 5px 5px #ddd;
+    border-radius: 10px;
+  }
+  .a {
+    padding-left: 25px;
+  }
+</style>
